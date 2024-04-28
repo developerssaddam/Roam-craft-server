@@ -15,7 +15,10 @@ const port = process.env.PORT || 9000;
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: [
+      "http://localhost:3000",
+      "https://tourism-management-syste-e8d0a.web.app",
+    ],
     credentials: true,
   })
 );
@@ -32,7 +35,7 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    await client.connect();
+    // await client.connect();
     console.log("MongoDB connection is successfull!".bgGreen.black);
 
     // Routes
