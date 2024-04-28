@@ -1,4 +1,4 @@
-import express from "express";
+import express, { query } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import colors from "colors";
@@ -64,6 +64,33 @@ async function run() {
     app.post("/touristspot/create", async (req, res) => {
       const data = req.body;
       const result = await touristspotCollection.insertOne(data);
+      res.send(result);
+    });
+
+    app.put("/touristspot/update/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateData = {
+        $set: {
+          name,
+          country_name,
+          location,
+          desc,
+          cost,
+          season,
+          travel_time,
+          total_visitors,
+          photo,
+        },
+      };
+
+      const result = await touristspotCollection.updateOne(
+        query,
+        updateData,
+        options
+      );
+
       res.send(result);
     });
 
