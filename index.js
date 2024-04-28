@@ -69,25 +69,26 @@ async function run() {
 
     app.put("/touristspot/update/:id", async (req, res) => {
       const id = req.params.id;
+      const updateData = req.body;
       const query = { _id: new ObjectId(id) };
       const options = { upsert: true };
-      const updateData = {
+      const newUpdatedData = {
         $set: {
-          name,
-          country_name,
-          location,
-          desc,
-          cost,
-          season,
-          travel_time,
-          total_visitors,
-          photo,
+          name: updateData.name,
+          country_name: updateData.country_name,
+          location: updateData.location,
+          desc: updateData.desc,
+          cost: updateData.cost,
+          season: updateData.season,
+          travel_time: updateData.travel_time,
+          total_visitors: updateData.total_visitors,
+          photo: updateData.photo,
         },
       };
 
       const result = await touristspotCollection.updateOne(
         query,
-        updateData,
+        newUpdatedData,
         options
       );
 
