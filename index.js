@@ -59,6 +59,17 @@ async function run() {
       res.send(result);
     });
 
+    // Get all tourist data match country_name of all countryCollection
+    app.get("/touristspot/match/:country_name", async (req, res) => {
+      const countryName = req.params.country_name;
+      const allTouristSpot = touristspotCollection.find();
+      const allTouristData = await allTouristSpot.toArray();
+      const matchData = allTouristData.filter(
+        (item) => item.country_name === countryName
+      );
+      res.send(matchData);
+    });
+
     // GetAll Tourist Spot.
     app.get("/touristspot", async (req, res) => {
       const allTouristSpot = touristspotCollection.find();
