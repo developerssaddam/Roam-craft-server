@@ -1,8 +1,8 @@
-import express, { query } from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import colors from "colors";
-import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const colors = require("colors");
+const { MongoClient, ObjectId, ServerApiVersion } = require("mongodb");
 
 // Init express
 const app = express();
@@ -12,16 +12,15 @@ dotenv.config();
 const port = process.env.PORT || 9000;
 
 // Middlewares
-app.use(express.json());
 app.use(
   cors({
     origin: [
       "http://localhost:3000",
       "https://tourism-management-syste-e8d0a.web.app",
     ],
-    credentials: true,
   })
 );
+app.use(express.json());
 
 // MongoDB Connection
 const uri = process.env.MONGO_URI;
@@ -43,20 +42,32 @@ async function run() {
       res.send(`Tourism Management server is running on port : ${port}`);
     });
 
-    // Create Collection
+    // Create Tourist Spot Collection
     const touristspotCollection = client
       .db("touristSpotDB")
       .collection("touristspotCollection");
 
+    // Create Tourist Spot countryCollection
+    const touristSpotCountryCollection = client
+      .db("touristSpotCountryDB")
+      .collection("touristSpotCountryCollection");
+
+    // GetAll Country Data.
+    app.get("/touristspot/country", async (req, res) => {
+      const allCountryData = touristSpotCountryCollection.find();
+      const result = await allCountryData.toArray();
+      res.send(result);
+    });
+
     // GetAll Tourist Spot.
-    app.get("/touristspot/create", async (req, res) => {
+    app.get("/touristspot", async (req, res) => {
       const allTouristSpot = touristspotCollection.find();
       const result = await allTouristSpot.toArray();
       res.send(result);
     });
 
     // Get Single tourist spot.
-    app.get("/touristspot/create/:id", async (req, res) => {
+    app.get("/touristspot/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await touristspotCollection.findOne(query);
