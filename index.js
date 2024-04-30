@@ -65,7 +65,7 @@ async function run() {
       const allTouristSpot = touristspotCollection.find();
       const allTouristData = await allTouristSpot.toArray();
       const matchData = allTouristData.filter(
-        (item) => item.country_name === countryName
+        (item) => item.country_name.toLowerCase() === countryName.toLowerCase()
       );
       res.send(matchData);
     });
